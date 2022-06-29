@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Header from "./Header";
 import api from "../../services/api";
+import Header from "./Header";
+import InsertList from "./InsertList";
 
 import "./styles.css";
 import { Container, Grid } from "@material-ui/core";
+
 
 export default function Lists() {
   const [token] = useState(localStorage.getItem("token"));
