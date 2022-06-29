@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import Header from "./Header";
 import InsertList from "./InsertList";
+import InsertTask from "./InsertTask";
+import Task from "./Task";
 
 import "./styles.css";
 import { Container, Grid } from "@material-ui/core";
-
 
 export default function Lists() {
   const [token] = useState(localStorage.getItem("token"));
