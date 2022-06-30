@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiLogIn } from 'react-icons/fi';
 
 import './styles.css';
-import axios from "axios";
+import api from "../../services/api";
 
 export default function Logon(){
     const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ export default function Logon(){
     
         const fetchLogin = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/login', { email, password });
+                const response = await api.get('/api/login', { email, password });
                 localStorage.setItem('token', response.data.token);
         
                 navigate('/lists', {replace: true});

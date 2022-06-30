@@ -10,7 +10,7 @@ export default function InsertList({onInsertList}){
 
         await onInsertList({
             "title": listName, 
-            "status": 0
+            "status": false
         });
 
         setListName("");
@@ -18,7 +18,7 @@ export default function InsertList({onInsertList}){
 };
 
     return (
-       <div>
+       <div className="form">
         <strong>Cadastrar lista</strong>
         <form onSubmit={handleSubmit}>
         <TextField 

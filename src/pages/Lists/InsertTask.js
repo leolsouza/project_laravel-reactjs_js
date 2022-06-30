@@ -28,7 +28,7 @@ export default function InsertTask({ onInsertTask, taskList }) {
     await onInsertTask({
       "list_id": selectList,
       "title": taskName,
-      "status": 0,
+      "status": false,
     });
 
     setTaskName("");
@@ -36,7 +36,7 @@ export default function InsertTask({ onInsertTask, taskList }) {
   };
 
   return (
-    <div>
+    <div className="form">
       <strong>Cadastrar Tarefa</strong>
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <div>
