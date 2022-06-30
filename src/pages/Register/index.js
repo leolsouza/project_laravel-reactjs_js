@@ -23,14 +23,10 @@ export default function Register() {
         }
         
         try {
-            api.post('api/register', data)
-            .then(async (res) =>{
-              if(res.data.status){
-                const responseLogin = await api.post('api/login', { email, password });
-                localStorage.setItem('token', responseLogin.data.token);
-                navigate('/lists',{replace :true});
-              }
-            });
+          await api.post('api/register', data);
+            alert('Sua conta foi cadastrada com sucesso');
+             navigate('/', {replace : true});
+            
           } catch (err) {
             alert('Erro no cadastro, tente novamente.');
           }

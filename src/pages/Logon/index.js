@@ -13,9 +13,8 @@ export default function Logon(){
     async function handleLogin(e){
         e.preventDefault();
     
-        const fetchLogin = async () => {
             try {
-                const response = await api.get('/api/login', { email, password });
+                const response = await api.post('/api/auth/login', { email, password });
                 localStorage.setItem('token', response.data.token);
         
                 navigate('/lists', {replace: true});
@@ -23,8 +22,8 @@ export default function Logon(){
                 alert('Falha no login, tente novamente.');
             }
         };
-        fetchLogin();
-    }
+
+   
 
     return (
         <div className="logon-container">
@@ -56,7 +55,4 @@ export default function Logon(){
             </div>
         </div>
     );
-
-
-
 }
