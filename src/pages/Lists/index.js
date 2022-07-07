@@ -11,40 +11,35 @@ import "./styles.css";
 import { Container, Grid } from "@material-ui/core";
 
 export default function Lists() {
-  const [token] = useState(localStorage.getItem("token"));
+
   const [taskList, setTaskList] = useState([]);
   const [listId, setListId] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('api/tasklist', {
+    api.get('api/taskgroups', {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
     }).then(response => {
-      if(response.data.status && response.data.status === (401 || 498)){
-        localStorage.clear();
-        navigate('/');
-      }else{
-        setTaskList(response.data.data);
-      }
+      setTaskList(response.data);   
     }).catch(err => {
       alert(err)
     })
-  }, [token]);
+  }, [setTaskList]);
 
   async function onInsertList(data){
-    api.post("/api/tasklist", data, {
+    api.post("/api/taskgroups", data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
     }).then(response => {
-      if(response.data.status && response.data.status === (401 || 498)){
+      if(response.status && response.status === (401 || 498)){
         localStorage.clear();
         navigate('/');
       }
-      setTaskList([...taskList, response.data.data]);
+      setTaskList([...taskList, response.data]);
     }).catch(err => {
       alert(err)
     })
@@ -54,20 +49,21 @@ export default function Lists() {
     await setListId('')
     await api.post("/api/tasks", data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
     }).then(response => {
       console.log(response)
-      if(response.data.status && response.data.status === (401 || 498)){
+      if(response.data.status && response.status === (401 || 498)){
         localStorage.clear();
         navigate('/');
       }
-      setListId(response.data.data.list_id)
+      setListId(response.data.list_id)
     }).catch(err => {
       alert(err)
     })  
   }
 
+  
   return (
     <>
       <Header />

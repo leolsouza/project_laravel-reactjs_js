@@ -10,7 +10,7 @@ export default function InsertList({onInsertList}){
 
         await onInsertList({
             "title": listName, 
-            "status": false
+            "user_id": 1
         });
 
         setListName("");

@@ -19,16 +19,16 @@ export default function InsertTask({ onInsertTask, taskList }) {
   }, [taskList]);
 
   const handleChangeSelect = (event) =>{
-    setSelectList(event?.targe.value);
+    setSelectList(event?.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     await onInsertTask({
-      "list_id": selectList,
+      "task_group_id": selectList,
       "title": taskName,
-      "status": false,
+      "completed": false,
     });
 
     setTaskName("");

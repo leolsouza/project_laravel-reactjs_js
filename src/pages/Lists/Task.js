@@ -10,8 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import api from "../../services/api";
 
-import { green } from '@material-ui/core/colors';
-import { FiTrash } from 'react-icons/fi';
+import { green } from "@material-ui/core/colors";
+import { FiTrash } from "react-icons/fi";
 
 const GreenCheckbox = withStyles({
   root: {
@@ -33,19 +33,19 @@ export default function Task({ list, listId }) {
 
   useEffect(() => {
     if (list === listId) {
-      getTasks(listId);
+      getTasks();
     }
   }, [listId]);
 
   const getTasks = async (list_id = "") => {
     const getList = list_id === "" ? list : list_id;
-    const response = await api.get(`api/list/tasks/${getList}`, {
+    const response = await api.get(`api/taskgroups/${getList}/tasks`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     if (response.data) {
-      return setTasks(response.data.data);
+      return setTasks(response.data);
     }
     setTasks([]);
   };
@@ -55,7 +55,7 @@ export default function Task({ list, listId }) {
 
     api
       .put(
-        `api/task/close/${taskId}`,
+        `api/tasks/close/${taskId}`,
         {},
         {
           headers: {
@@ -64,7 +64,7 @@ export default function Task({ list, listId }) {
         }
       )
       .then((response) => {
-        getTasks(response.data.data.list_id);
+        getTasks(response.data.list_id);
       });
   };
 
@@ -76,7 +76,7 @@ export default function Task({ list, listId }) {
         },
       })
       .then((response) => {
-        getTasks(response.data.data.list_id);
+        getTasks(response.data.list_id);
       })
       .catch((err) => {
         alert(err);
@@ -93,12 +93,7 @@ export default function Task({ list, listId }) {
                   <FormGroup aria-label="position" row>
                     <FormControlLabel
                       value={task.id}
-                      control={
-                        <GreenCheckbox
-                          checked={task.status === "À Fazer" ? false : true}
-                          onChange={handleChange}
-                        />
-                      }
+                      control={<GreenCheckbox checked={task.completed === true} onChange={handleChange}/>}
                       label={task.title}
                       labelPlacement="end"
                     />
