@@ -12,7 +12,6 @@ export default function InsertList({onInsertList}){
             "title": listName, 
             "user_id": 1
         });
-
         setListName("");
     
 };
