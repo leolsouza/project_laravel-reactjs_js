@@ -18,7 +18,7 @@ export default function InsertTask({ onInsertTask, taskList }) {
     }
   }, [taskList]);
 
-  const handleChangeSelect = (event) =>{
+  const handleChangeSelect = (event) => {
     setSelectList(event?.target.value);
   };
 
@@ -26,9 +26,9 @@ export default function InsertTask({ onInsertTask, taskList }) {
     event.preventDefault();
 
     await onInsertTask({
-      "task_group_id": selectList,
-      "title": taskName,
-      "completed": false,
+      title: taskName,
+      completed: false,
+      task_group_id: selectList,
     });
 
     setTaskName("");

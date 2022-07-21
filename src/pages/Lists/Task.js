@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 
 import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { changeCompletedTask, deletedTask, taskGroups } from "../../services";
 
 import { green } from "@material-ui/core/colors";
 import { FiTrash } from "react-icons/fi";
@@ -24,7 +24,6 @@ const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 export default function Task({ list, listId }) {
-  const [token] = useState(localStorage.getItem("token"));
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -39,11 +38,7 @@ export default function Task({ list, listId }) {
 
   const getTasks = async (list_id = "") => {
     const getList = list_id === "" ? list : list_id;
-    const response = await api.get(`api/taskgroups/${getList}/tasks`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await taskGroups(getList);
     if (response.data) {
       return setTasks(response.data);
     }
@@ -52,35 +47,17 @@ export default function Task({ list, listId }) {
   const handleChange = async (event) => {
     event.preventDefault();
     const taskId = parseInt(event.target.value);
-
-    api
-      .put(
-        `api/tasks/close/${taskId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        getTasks(response.data.list_id);
-      });
+    const response = await changeCompletedTask(taskId);
+    getTasks(response.data.list_id);
   };
 
-  const handleDelete = async (task) => {
-    api
-      .delete(`/api/tasks/${task}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        getTasks(response.data.list_id);
-      })
-      .catch((err) => {
-        alert(err);
-      });
+  const handleDelete = async (taskId) => {
+    try {
+      const response = await deletedTask(taskId);
+      getTasks(response.data.list_id);
+    } catch (err) {
+      alert("Erro ao apagar a task");
+    }
   };
 
   return (
@@ -93,7 +70,12 @@ export default function Task({ list, listId }) {
                   <FormGroup aria-label="position" row>
                     <FormControlLabel
                       value={task.id}
-                      control={<GreenCheckbox checked={task.completed === true} onChange={handleChange}/>}
+                      control={
+                        <GreenCheckbox
+                          checked={task.completed === true}
+                          onChange={handleChange}
+                        />
+                      }
                       label={task.title}
                       labelPlacement="end"
                     />
