@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiLogIn } from "react-icons/fi";
 
 import "./styles.css";
-import { login } from "../../services";
+import { login } from "../../services/services";
 
 export default function Logon() {
   const [email, setEmail] = useState("");

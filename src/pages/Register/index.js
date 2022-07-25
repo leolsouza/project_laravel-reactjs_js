@@ -4,7 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import "./styles.css";
 import { useState } from "react";
 
-import { register } from "../../services";
+import { register } from "../../services/services";
 
 export default function Register() {
   const [name, setName] = useState("");

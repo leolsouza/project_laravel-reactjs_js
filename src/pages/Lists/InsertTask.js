@@ -5,18 +5,13 @@ import {
   Select,
   TextField,
 } from "@material-ui/core";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useTaskGroup } from "../../contexts/TaskGroupContext";
 
-export default function InsertTask({ onInsertTask, taskList }) {
-  const [lists, setLists] = useState([]);
+export default function InsertTask() {
   const [selectList, setSelectList] = useState("");
   const [taskName, setTaskName] = useState("");
-
-  useEffect(() => {
-    if (taskList.length > 0) {
-      setLists(taskList);
-    }
-  }, [taskList]);
+  const { handleInsertTask, taskList } = useTaskGroup();
 
   const handleChangeSelect = (event) => {
     setSelectList(event?.target.value);
@@ -25,7 +20,7 @@ export default function InsertTask({ onInsertTask, taskList }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await onInsertTask({
+    await handleInsertTask({
       title: taskName,
       completed: false,
       task_group_id: selectList,
@@ -60,8 +55,8 @@ export default function InsertTask({ onInsertTask, taskList }) {
               value={selectList}
               onChange={handleChangeSelect}
             >
-              {lists.length > 0
-                ? lists.map((list) => (
+              {taskList.length > 0
+                ? taskList.map((list) => (
                     <MenuItem key={list.id} value={list.id}>
                       {list.title}
                     </MenuItem>

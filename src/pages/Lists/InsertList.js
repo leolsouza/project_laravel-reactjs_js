@@ -1,15 +1,16 @@
 import { TextField } from "@material-ui/core";
 import { useState } from "react";
+import { useTaskGroup } from "../../contexts/TaskGroupContext";
 
-export default function InsertList({ onInsertList }) {
+export default function InsertList() {
   const [listName, setListName] = useState("");
+  const { handleInsertList } = useTaskGroup();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await onInsertList({
+    await handleInsertList({
       title: listName,
-      user_id: 1,
     });
 
     setListName("");

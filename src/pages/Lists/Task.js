@@ -7,11 +7,9 @@ import {
   Grid,
 } from "@material-ui/core";
 
-import { useEffect, useState } from "react";
-import { changeCompletedTask, deletedTask, taskGroups } from "../../services";
-
 import { green } from "@material-ui/core/colors";
 import { FiTrash } from "react-icons/fi";
+import { useTaskGroup } from "../../contexts/TaskGroupContext";
 
 const GreenCheckbox = withStyles({
   root: {
@@ -23,42 +21,9 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-export default function Task({ list, listId }) {
-  const [tasks, setTasks] = useState([]);
-
-  useEffect(() => {
-    getTasks();
-  }, [list]);
-
-  useEffect(() => {
-    if (list === listId) {
-      getTasks();
-    }
-  }, [listId]);
-
-  const getTasks = async (list_id = "") => {
-    const getList = list_id === "" ? list : list_id;
-    const response = await taskGroups(getList);
-    if (response.data) {
-      return setTasks(response.data);
-    }
-    setTasks([]);
-  };
-  const handleChange = async (event) => {
-    event.preventDefault();
-    const taskId = parseInt(event.target.value);
-    const response = await changeCompletedTask(taskId);
-    getTasks(response.data.list_id);
-  };
-
-  const handleDelete = async (taskId) => {
-    try {
-      const response = await deletedTask(taskId);
-      getTasks(response.data.list_id);
-    } catch (err) {
-      alert("Erro ao apagar a task");
-    }
-  };
+export default function Task({ list }) {
+  const { tasks } = list;
+  const { handleChangeTask, handleDeleteTask } = useTaskGroup();
 
   return (
     <>
@@ -73,7 +38,7 @@ export default function Task({ list, listId }) {
                       control={
                         <GreenCheckbox
                           checked={task.completed === true}
-                          onChange={handleChange}
+                          onChange={() => handleChangeTask(task.id)}
                         />
                       }
                       label={task.title}
@@ -85,7 +50,7 @@ export default function Task({ list, listId }) {
               <Grid item xs={2}>
                 <FiTrash
                   className="floatRight deleteIcon"
-                  onClick={() => handleDelete(task.id)}
+                  onClick={() => handleDeleteTask(task.id)}
                   size={18}
                 />
               </Grid>

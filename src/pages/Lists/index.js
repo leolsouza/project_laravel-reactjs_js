@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 import Header from "./Header";
 import InsertList from "./InsertList";
 import InsertTask from "./InsertTask";
@@ -8,51 +5,16 @@ import Task from "./Task";
 
 import "./styles.css";
 import { Container, Grid } from "@material-ui/core";
-import { insertList, insertTask, showTaskGroup } from "../../services";
+
+import { useTaskGroup } from "../../contexts/TaskGroupContext";
+import { useEffect } from "react";
 
 export default function Lists() {
-  const [taskList, setTaskList] = useState([]);
-  const [listId, setListId] = useState("");
-
-  const navigate = useNavigate();
+  const { taskList, fetchTaskGroup } = useTaskGroup();
 
   useEffect(() => {
-    try {
-      const getTaskGroup = async () => {
-        const response = await showTaskGroup();
-        setTaskList(response.data);
-      };
-      getTaskGroup();
-    } catch (err) {
-      alert(err);
-    }
-  }, [setTaskList]);
-
-  async function onInsertList(data) {
-    try {
-      const response = await insertList(data);
-      if (response.status && response.status === (401 || 498)) {
-        localStorage.clear();
-        navigate("/");
-      }
-      setTaskList([...taskList, response.data]);
-    } catch (err) {
-      alert("Erro ao inserir uma lista de tarefas");
-    }
-  }
-
-  async function onInsertTask(data) {
-    try {
-      const response = await insertTask(data);
-      if (response.data.status && response.status === (401 || 498)) {
-        localStorage.clear();
-        navigate("/");
-      }
-      setListId([...listId, response.data.list_id]);
-    } catch (err) {
-      alert("Erro ao criar a tarefa");
-    }
-  }
+    fetchTaskGroup();
+  }, [fetchTaskGroup]);
 
   return (
     <>
@@ -60,8 +22,8 @@ export default function Lists() {
       <Container maxWidth="xl">
         <Grid container>
           <Grid item xs={3}>
-            <InsertList onInsertList={onInsertList} />
-            <InsertTask onInsertTask={onInsertTask} taskList={taskList} />
+            <InsertList />
+            <InsertTask />
           </Grid>
 
           <Grid item xs={8}>
@@ -83,7 +45,7 @@ export default function Lists() {
                           <div className="Taks">
                             <div className="TaskItem">
                               <Container maxWidth="xl">
-                                <Task list={list.id} listId={listId} />
+                                <Task list={list} />
                               </Container>
                             </div>
                           </div>
